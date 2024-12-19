@@ -95,7 +95,7 @@ Options:
 Result will be in the file `result.bat`, and in file `times.txt`
 it will be the time spent on calculations and the number of processes.
 
-[!NOTE]
+> [!NOTE]
 > Do not forget to connect SpectrumMPI 
 > ```bash
 > module load SpectrumMPI
