@@ -37,8 +37,8 @@ def main():
     parser.add_argument("-n", type=int, required=True, help="System dimension (n)")
     parser.add_argument("-m", type=str, default="auto", choices=["auto", "manual"], help="Method of generating vector x (auto/manual)")
     parser.add_argument("--x", type=str, help="Vector x as a comma-separated list (only for manual)")
-    parser.add_argument("-A", type=str, default="A.bat", help="Name of the file for matrix A (default A.bat)")
-    parser.add_argument("-b", type=str, default="b.bat", help="Name of the file for vector b (default b.bat)")
+    parser.add_argument("-A", type=str, default="A.dat", help="Name of the file for matrix A (default A.bat)")
+    parser.add_argument("-b", type=str, default="b.dat", help="Name of the file for vector b (default b.bat)")
     parser.add_argument("-p", action="store_true", help="Flag to print result to the screen")
     args = parser.parse_args()
 
@@ -63,7 +63,7 @@ def main():
 
     save_matrix_to_file(A, args.A)
     save_vector_to_file(b, args.b)
-    save_vector_to_file(x, "x.bat")
+    save_vector_to_file(x, "x.dat")
     if args.p:
         print("Матрица A:")
         print_matrix(A)

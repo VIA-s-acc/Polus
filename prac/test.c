@@ -23,7 +23,7 @@ void read_local_matrix_and_vector(double **matrix, double *vector, int size, con
     int row_start = rank * (size / num_procs);
     int local_rows = (rank == num_procs - 1) ? size - row_start : size / num_procs;
 
-    // Skip rows in the matrix until the local portion is reached
+    
     for (int i = 0; i < row_start; i++) {
         for (int j = 0; j < size; j++) {
             fscanf(fileA, "%lf", &matrix[0][0]);
@@ -54,6 +54,7 @@ void read_local_matrix_and_vector(double **matrix, double *vector, int size, con
     for (int i = 0; i < local_rows; i++) {
         fscanf(fileB, "%lf", &vector[i]);
     }
+
 
     fclose(fileB);
 }
@@ -174,13 +175,13 @@ int main(int argc, char **argv) {
 
     // Write results and timing information from process 0
     if (rank == 0) {
-        FILE *time_file = fopen("times.txt", "a");
+        FILE *time_file = fopen("times.dat", "a");
         if (time_file) {
             fprintf(time_file, "%lf %d %d %lf %s %s\n", end_time - start_time, num_procs, size, tolerance, matrix_file, vector_file);
             fclose(time_file);
         }
 
-        FILE *result_file = fopen("result.bat", "w");
+        FILE *result_file = fopen("result.dat", "w");
         if (result_file) {
             for (int i = 0; i < size; i++) {
                 fprintf(result_file, "x[%d] = %lf\n", i, result[i]);
