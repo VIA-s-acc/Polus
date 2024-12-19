@@ -13,7 +13,7 @@
  * @param rank Rank of the current MPI process.
  * @param num_procs Total number of MPI processes.
  */
-void read_local_matrix_and_vector(double **matrix, double *vector, int size, const char *matrix_file, const char *vector_file, int rank, int num_procs) {
+void read_local_matrix_and_vector(double **matrix, double *vector, int size, const char *matrix_file, const char *vector_file, int rank, int num_procs) {   
     FILE *fileA = fopen(matrix_file, "r");
     if (!fileA) {
         fprintf(stderr, "Error opening file %s\n", matrix_file);

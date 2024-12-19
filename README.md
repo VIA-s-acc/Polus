@@ -108,8 +108,7 @@ A graph showing the acceleration of the program as a function of the number of p
 ![acceleration](Graph/Figure_1.png)
 
 $$
-A: \mathbb{R}^{1500} \to \mathbb{R}^{1500}, \quad A x = b \\
-
+A: \mathbb{R}^{1500} \to \mathbb{R}^{1500}, \quad A x = b \newline
 A \in \mathbb{R}^{1500 \times 1500}, \quad x \in \mathbb{R}^{1500}, \quad b \in \mathbb{R}^{1500}
 $$
 
