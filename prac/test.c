@@ -3,219 +3,201 @@
 #include <stdlib.h>
 #include <math.h>
 
-
-void read_local_matrix_and_vector(double **A, double *b, int n, const char *fileA_name, const char *fileB_name, int rank, int size) {
-    FILE *fileA = fopen(fileA_name, "r");
+/**
+ * Reads the local portion of a matrix and a vector from files.
+ * @param matrix Pointer to the matrix to fill.
+ * @param vector Pointer to the vector to fill.
+ * @param size Total size of the matrix and vector.
+ * @param matrix_file Name of the file containing the matrix.
+ * @param vector_file Name of the file containing the vector.
+ * @param rank Rank of the current MPI process.
+ * @param num_procs Total number of MPI processes.
+ */
+void read_local_matrix_and_vector(double **matrix, double *vector, int size, const char *matrix_file, const char *vector_file, int rank, int num_procs) {
+    FILE *fileA = fopen(matrix_file, "r");
     if (!fileA) {
-        fprintf(stderr, "Error opening file %s\n", fileA_name);
+        fprintf(stderr, "Error opening file %s\n", matrix_file);
         MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
-    int row_start = rank * (n / size);
-    int local_rows = (rank == size - 1) ? n - row_start : n / size;
+    int row_start = rank * (size / num_procs);
+    int local_rows = (rank == num_procs - 1) ? size - row_start : size / num_procs;
 
-    // Пропускаем строки до нужной части матрицы A
+    // Skip rows in the matrix until the local portion is reached
     for (int i = 0; i < row_start; i++) {
-        for (int j = 0; j < n; j++) {
-            fscanf(fileA, "%lf", &A[0][0]);  // Просто пропускаем данные
+        for (int j = 0; j < size; j++) {
+            fscanf(fileA, "%lf", &matrix[0][0]);
         }
     }
 
-    // Чтение локальной части матрицы A
+    // Read the local portion of the matrix
     for (int i = 0; i < local_rows; i++) {
-        for (int j = 0; j < n; j++) {
-            fscanf(fileA, "%lf", &A[i][j]);  // Читаем нужные данные
+        for (int j = 0; j < size; j++) {
+            fscanf(fileA, "%lf", &matrix[i][j]);
         }
     }
 
     fclose(fileA);
 
-    // Печать локальной части матрицы A
-    // printf("Rank: %d local_A\n", rank);
-    // for (int i = 0; i < local_rows; i++) {
-    //     for (int j = 0; j < n; j++) {
-    //         printf("%4.2f ", A[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    // printf("\n");
-
-    // Чтение локальной части вектора b
-    FILE *fileB = fopen(fileB_name, "r");
+    FILE *fileB = fopen(vector_file, "r");
     if (!fileB) {
-        fprintf(stderr, "Error opening file %s\n", fileB_name);
+        fprintf(stderr, "Error opening file %s\n", vector_file);
         MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
-    // Пропускаем строки до нужной части вектора b
+    // Skip values in the vector until the local portion is reached
     for (int i = 0; i < row_start; i++) {
-        fscanf(fileB, "%lf", &b[0]);  // Просто пропускаем данные
+        fscanf(fileB, "%lf", &vector[0]);
     }
 
-    // Чтение локальной части вектора b
+    // Read the local portion of the vector
     for (int i = 0; i < local_rows; i++) {
-        fscanf(fileB, "%lf", &b[i]);  // Читаем нужные данные
+        fscanf(fileB, "%lf", &vector[i]);
     }
 
     fclose(fileB);
-
-    // Печать локальной части вектора b
-    // printf("Rank: %d local_b\n", rank);
-    // for (int i = 0; i < local_rows; i++) {
-    //     printf("%4.2f ", b[i]);
-    // }
-    // printf("\n\n");
 }
 
-
-
-// Метод Якоби для решения системы Ax = b
-void jacobi_method(double **A, double *b, double *x, int n, double eps, int rank, int size) {
-    int i, j;
-    int row_start = rank * (n / size);  // Индекс начала строки для текущего процесса
-    int local_rows = (rank == size - 1) ? n - row_start : n / size;  // Количество строк для текущего процесса
-    double *new_x = (double *)malloc(local_rows * sizeof(double));  // Массив для нового вектора x
-    double max_diff;
-    // printf("Rank: %d\n", rank);
-    // Печать локальной части матрицы A
-    // printf("Rank: %d local_A\n", rank);
-    // for (i = 0; i < local_rows; i++) {
-    //     for (j = 0; j < n; j++) {
-    //         printf("%4.2f ", A[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    // printf("\n");
-
-    // Печать локальной части вектора b
-    // printf("Rank: %d local_b\n", rank);
-    // for (i = 0; i < local_rows; i++) {
-    //     printf("%4.2f ", b[i]);
-    // }
-    // printf("\n\n");
+/**
+ * Performs the Jacobi iterative method to solve a system of linear equations.
+ * @param matrix Local portion of the matrix.
+ * @param vector Local portion of the vector.
+ * @param result Result vector.
+ * @param size Total size of the system.
+ * @param tolerance Tolerance for convergence.
+ * @param rank Rank of the current MPI process.
+ * @param num_procs Total number of MPI processes.
+ */
+void jacobi_method(double **matrix, double *vector, double *result, int size, double tolerance, int rank, int num_procs) {
+    int row_start = rank * (size / num_procs);
+    int local_rows = (rank == num_procs - 1) ? size - row_start : size / num_procs;
+    double *new_result = (double *)malloc(local_rows * sizeof(double));
+    double max_difference;
 
     do {
-        max_diff = 0.0;
-        
-        // Вычисление нового значения для каждой строки, принадлежащей процессу
-        for (i = 0; i < local_rows; i++) {
+        max_difference = 0.0;
+
+        // Calculate new values for the result vector
+        for (int i = 0; i < local_rows; i++) {
             double sum = 0.0;
-            for (j = 0; j < n; j++) {
-                if (j != row_start + i) {  // Не учитываем диагональный элемент
-                    sum += A[i][j] * x[j];  // Суммируем произведение
+            for (int j = 0; j < size; j++) {
+                if (j != row_start + i) {
+                    sum += matrix[i][j] * result[j];
                 }
             }
-            new_x[i] = (b[i] - sum) / A[i][row_start + i];  // Обновляем новое значение x для текущей строки
-            // printf("rank: %d, i: %d, new_x[i]: %f, b[i]: %f, sum: %f, A[i][row_start + i]: %f\n", rank, i, new_x[i], b[i], sum, A[i][row_start + i]);
+            new_result[i] = (vector[i] - sum) / matrix[i][row_start + i];
         }
 
-        // Сбор новых значений вектора x с помощью MPI_Allgatherv
-        int *recvcounts = (int *)malloc(size * sizeof(int));  // Количество элементов для каждого процесса
-        int *displs = (int *)malloc(size * sizeof(int));      // Смещения для каждого процесса
-        for (i = 0; i < size; i++) {
-            recvcounts[i] = n / size + (i == size - 1 ? n % size : 0);  // Количество строк для процесса
-            displs[i] = i * (n / size);  // Смещение для каждого процесса
+        // Prepare for gathering results from all processes
+        int *recv_counts = (int *)malloc(num_procs * sizeof(int));
+        int *displacements = (int *)malloc(num_procs * sizeof(int));
+        for (int i = 0; i < num_procs; i++) {
+            recv_counts[i] = size / num_procs + (i == num_procs - 1 ? size % num_procs : 0);
+            displacements[i] = i * (size / num_procs);
         }
 
-
-        // Обновление максимальной разницы между старым и новым значением x
-        for (i = 0; i < local_rows; i++) {
-            double diff = fabs(new_x[i] - x[row_start + i]);
-            if (diff > max_diff) max_diff = diff;
+        // Calculate the maximum difference for convergence
+        for (int i = 0; i < local_rows; i++) {
+            double diff = fabs(new_result[i] - result[row_start + i]);
+            if (diff > max_difference) max_difference = diff;
         }
 
-        // Собираем новые значения вектора x с всех процессов
-        MPI_Allgatherv(new_x, local_rows, MPI_DOUBLE, x, recvcounts, displs, MPI_DOUBLE, MPI_COMM_WORLD);
+        // Gather results from all processes and update the result vector
+        MPI_Allgatherv(new_result, local_rows, MPI_DOUBLE, result, recv_counts, displacements, MPI_DOUBLE, MPI_COMM_WORLD);
+        MPI_Allreduce(MPI_IN_PLACE, &max_difference, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
 
-        // Получаем максимальную разницу между всеми процессами
-        MPI_Allreduce(MPI_IN_PLACE, &max_diff, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+        free(recv_counts);
+        free(displacements);
 
-        printf("max_diff: %f\n", max_diff);
+    } while (max_difference > tolerance);
 
-        free(recvcounts);
-        free(displs);
-
-    } while (max_diff > eps);  // Условие завершения итераций
-    free(new_x);  // Освобождение памяти для new_x
+    free(new_result);
 }
 
-
+/**
+ * Main entry point of the program.
+ * Initializes MPI, reads the matrix and vector, performs the Jacobi method,
+ * and writes results to files.
+ */
 int main(int argc, char **argv) {
-    int rank, size, n;
-    double eps;
-    char fileA_name[256], fileB_name[256];
+    int rank, num_procs, size;
+    double tolerance;
+    char matrix_file[256], vector_file[256];
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
-    // Инициализация параметров с процессом 0
+    // Initialize parameters on process 0
     if (rank == 0) {
         if (argc != 5) {
             fprintf(stderr, "Usage: %s N=100 eps=0.001 A=A.dat b=b.dat\n", argv[0]);
             MPI_Abort(MPI_COMM_WORLD, 1);
         }
 
-        sscanf(argv[1], "N=%d", &n);
-        sscanf(argv[2], "eps=%lf", &eps);
-        sscanf(argv[3], "A=%255s", fileA_name);
-        sscanf(argv[4], "b=%255s", fileB_name);
+        sscanf(argv[1], "N=%d", &size);
+        sscanf(argv[2], "eps=%lf", &tolerance);
+        sscanf(argv[3], "A=%255s", matrix_file);
+        sscanf(argv[4], "b=%255s", vector_file);
 
-        if (n < 5) {
+        if (size < 5) {
             fprintf(stderr, "Matrix size must be at least 5\n");
             MPI_Abort(MPI_COMM_WORLD, 1);
         }
     }
 
-    MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Bcast(&eps, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Bcast(fileA_name, 256, MPI_CHAR, 0, MPI_COMM_WORLD);
-    MPI_Bcast(fileB_name, 256, MPI_CHAR, 0, MPI_COMM_WORLD);
+    // Broadcast parameters to all processes
+    MPI_Bcast(&size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&tolerance, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(matrix_file, 256, MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Bcast(vector_file, 256, MPI_CHAR, 0, MPI_COMM_WORLD);
 
-    int local_rows = n / size + (rank == size - 1 ? n % size : 0);
-    double **A = (double **)malloc(local_rows * sizeof(double *));
+    int local_rows = size / num_procs + (rank == num_procs - 1 ? size % num_procs : 0);
+    double **matrix = (double **)malloc(local_rows * sizeof(double *));
     for (int i = 0; i < local_rows; i++) {
-        A[i] = (double *)malloc(n * sizeof(double));
+        matrix[i] = (double *)malloc(size * sizeof(double));
     }
-    double *b = (double *)malloc(local_rows * sizeof(double));
-    double *x = (double *)malloc(n * sizeof(double));
+    double *vector = (double *)malloc(local_rows * sizeof(double));
+    double *result = (double *)malloc(size * sizeof(double));
 
-    // Инициализация вектора x нулями
-    for (int i = 0; i < n; i++) {
-        x[i] = 0.0;
+    // Initialize the result vector with zeros
+    for (int i = 0; i < size; i++) {
+        result[i] = 0.0;
     }
 
-    // Чтение локальных частей матрицы и вектора
-    read_local_matrix_and_vector(A, b, n, fileA_name, fileB_name, rank, size);
+    // Read local parts of the matrix and vector
+    read_local_matrix_and_vector(matrix, vector, size, matrix_file, vector_file, rank, num_procs);
 
     double start_time = MPI_Wtime();
-    jacobi_method(A, b, x, n, eps, rank, size);
+    jacobi_method(matrix, vector, result, size, tolerance, rank, num_procs);
     double end_time = MPI_Wtime();
 
+    // Write results and timing information from process 0
     if (rank == 0) {
-        FILE *file_time = fopen("times.txt", "a");
-        if (file_time) {
-            fprintf(file_time, "%lf %d\n", end_time - start_time, size);
-            fclose(file_time);
+        FILE *time_file = fopen("times.txt", "a");
+        if (time_file) {
+            fprintf(time_file, "%lf %d %d %lf %s %s\n", end_time - start_time, num_procs, size, tolerance, matrix_file, vector_file);
+            fclose(time_file);
         }
 
-        FILE *file_result = fopen("result.bat", "a");
-        if (file_result) {
-            for (int i = 0; i < n; i++) {
-                fprintf(file_result, "x[%d] = %lf\n", i, x[i]);
+        FILE *result_file = fopen("result.bat", "w");
+        if (result_file) {
+            for (int i = 0; i < size; i++) {
+                fprintf(result_file, "x[%d] = %lf\n", i, result[i]);
             }
-            fclose(file_result);
+            fclose(result_file);
         }
     }
 
-    // Освобождение памяти
+    // Clean up allocated memory
     for (int i = 0; i < local_rows; i++) {
-        free(A[i]);
+        free(matrix[i]);
     }
-    free(A);
-    free(b);
-    free(x);
+    free(matrix);
+    free(vector);
+    free(result);
 
     MPI_Finalize();
     return 0;
 }
+
