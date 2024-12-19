@@ -110,13 +110,17 @@ A graph showing the acceleration of the program as a function of the number of p
 $$
 A: \mathbb{R}^{1500} \to \mathbb{R}^{1500}, \quad A x = b \newline
 $$
+
 $$
 A \in \mathbb{R}^{1500 \times 1500}, \quad x \in \mathbb{R}^{1500}, \quad b \in \mathbb{R}^{1500}
 $$
+
 Next, let $ p $ be a natural number from 1 to 20 (inclusive), where $ p $ is the number of processes. Then, define the acceleration as:
+
 $$
 S(p) = \frac{T(1)}{T(p)}
 $$
+
 where $ T(p) $ is the time spent on $ p $ processes, and $ T(1) $ is the time spent on one process.
 
 For the construction of the graphics, interpolation methods were used. These include linear, quadratic, and cubic interpolation, which are widely applied to approximate unknown functions based on known data points.
@@ -129,11 +133,7 @@ $$
 f(x) = y_0 + \frac{(x - x_0)}{(x_1 - x_0)} (y_1 - y_0)
 $$
 
-where $
- (x_0, y_0) $
- and $
- (x_1, y_1) $
- are the given data points.
+where $ (x_0, y_0) $ and $ (x_1, y_1) $ are the given data points.
 
 #### Quadratic Interpolation
 ---
@@ -154,8 +154,6 @@ $$
 f(x) = a_3 x^3 + a_2 x^2 + a_1 x + a_0
 $$
 
-The coefficients $
- a_0, a_1, a_2, a_3 $
- are determined by solving a system of equations that ensure the function passes through the four data points and satisfies the necessary smoothness conditions (first and second derivatives at the points).
+The coefficients $ a_0, a_1, a_2, a_3 $ are determined by solving a system of equations that ensure the function passes through the four data points and satisfies the necessary smoothness conditions (first and second derivatives at the points).
 
 
