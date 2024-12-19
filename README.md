@@ -92,7 +92,7 @@ Options:
   -program PROGRAM  Name of the compiled program (required)
 ```
 
-Result will be in the file `result.bat`, and in file `times.txt`
+Result will be in the file `result.dat`, and in file `times.dat`
 it will be the time spent on calculations and the number of processes.
 
 > [!NOTE]
@@ -106,4 +106,10 @@ it will be the time spent on calculations and the number of processes.
 A graph showing the acceleration of the program as a function of the number of processes $ p $, with the calculation time not including the time spent on reading data from a file and writing the result to a file.
 
 ![acceleration](Graph/Figure_1.png)
+
+$$
+
+A: \mathbb{R}^{1500} \to \mathbb{R}^{1500}, \quad A x = b \\
+A \in \mathbb{R}^{1500 \times 1500}, \quad x \in \mathbb{R}^{1500}, \quad b \in \mathbb{R}^{1500}
+$$
 
