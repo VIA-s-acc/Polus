@@ -1,0 +1,113 @@
+\doxysection{jacobi\+\_\+\+MPI.\+c File Reference}
+\hypertarget{jacobi___m_p_i_8c}{}\label{jacobi___m_p_i_8c}\index{jacobi\_MPI.c@{jacobi\_MPI.c}}
+
+
+Solves a system of linear equations using the Jacobi iterative method with MPI parallelization.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$mpi.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{jacobi___m_p_i_8c_a6343371b77b4f1b54248fe9b20ebb7d7}{jacobi\+\_\+method}} (double \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}matrix, double \texorpdfstring{$\ast$}{*}vector, double \texorpdfstring{$\ast$}{*}result, int size, double tolerance, int rank, int num\+\_\+procs)
+\begin{DoxyCompactList}\small\item\em Performs the Jacobi iterative method to solve a system of linear equations. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{jacobi___m_p_i_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv)
+\begin{DoxyCompactList}\small\item\em Main entry point of the program. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{jacobi___m_p_i_8c_ad579857a6db8618da7baf6081775556f}{read\+\_\+local\+\_\+matrix\+\_\+and\+\_\+vector}} (double \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}matrix, double \texorpdfstring{$\ast$}{*}vector, int size, const char \texorpdfstring{$\ast$}{*}matrix\+\_\+file, const char \texorpdfstring{$\ast$}{*}vector\+\_\+file, int rank, int num\+\_\+procs)
+\begin{DoxyCompactList}\small\item\em Reads the local portion of a matrix and a vector from files. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Solves a system of linear equations using the Jacobi iterative method with MPI parallelization. 
+
+\hypertarget{jacobi___m_p_i_8c_description}{}\doxysubsection{\texorpdfstring{Description}{Description}}\label{jacobi___m_p_i_8c_description}
+This program reads the input matrix and vector from files, performs the Jacobi method to solve the system of linear equations, and writes the results to files. 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{jacobi___m_p_i_8c_a6343371b77b4f1b54248fe9b20ebb7d7}\index{jacobi\_MPI.c@{jacobi\_MPI.c}!jacobi\_method@{jacobi\_method}}
+\index{jacobi\_method@{jacobi\_method}!jacobi\_MPI.c@{jacobi\_MPI.c}}
+\doxysubsubsection{\texorpdfstring{jacobi\_method()}{jacobi\_method()}}
+{\footnotesize\ttfamily \label{jacobi___m_p_i_8c_a6343371b77b4f1b54248fe9b20ebb7d7} 
+void jacobi\+\_\+method (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{matrix}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{vector}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{result}{, }\item[{int}]{size}{, }\item[{double}]{tolerance}{, }\item[{int}]{rank}{, }\item[{int}]{num\+\_\+procs}{}\end{DoxyParamCaption})}
+
+
+
+Performs the Jacobi iterative method to solve a system of linear equations. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em matrix} & Local portion of the matrix. \\
+\hline
+\mbox{\texttt{ in}}  & {\em vector} & Local portion of the vector. \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em result} & Result vector updated with the solution. \\
+\hline
+\mbox{\texttt{ in}}  & {\em size} & Total size of the system. \\
+\hline
+\mbox{\texttt{ in}}  & {\em tolerance} & Tolerance for convergence. \\
+\hline
+\mbox{\texttt{ in}}  & {\em rank} & Rank of the current MPI process. \\
+\hline
+\mbox{\texttt{ in}}  & {\em num\+\_\+procs} & Total number of MPI processes. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{jacobi___m_p_i_8c_a3c04138a5bfe5d72780bb7e82a18e627}\index{jacobi\_MPI.c@{jacobi\_MPI.c}!main@{main}}
+\index{main@{main}!jacobi\_MPI.c@{jacobi\_MPI.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{jacobi___m_p_i_8c_a3c04138a5bfe5d72780bb7e82a18e627} 
+int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{argv}{}\end{DoxyParamCaption})}
+
+
+
+Main entry point of the program. 
+
+The program initializes MPI, reads the input matrix and vector, performs the Jacobi method to solve the system of linear equations, and writes the results to files.
+
+Command-\/line arguments\+:
+\begin{DoxyItemize}
+\item {\ttfamily N=\texorpdfstring{$<$}{<}size\texorpdfstring{$>$}{>}}\+: Size of the matrix and vector.
+\item {\ttfamily eps=\texorpdfstring{$<$}{<}tolerance\texorpdfstring{$>$}{>}}\+: Convergence tolerance.
+\item {\ttfamily A=\texorpdfstring{$<$}{<}matrix\+\_\+file\texorpdfstring{$>$}{>}}\+: Path to the matrix file.
+\item {\ttfamily b=\texorpdfstring{$<$}{<}vector\+\_\+file\texorpdfstring{$>$}{>}}\+: Path to the vector file.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & Number of command-\/line arguments. \\
+\hline
+{\em argv} & Array of command-\/line arguments. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exit status of the program. 
+\end{DoxyReturn}
+\Hypertarget{jacobi___m_p_i_8c_ad579857a6db8618da7baf6081775556f}\index{jacobi\_MPI.c@{jacobi\_MPI.c}!read\_local\_matrix\_and\_vector@{read\_local\_matrix\_and\_vector}}
+\index{read\_local\_matrix\_and\_vector@{read\_local\_matrix\_and\_vector}!jacobi\_MPI.c@{jacobi\_MPI.c}}
+\doxysubsubsection{\texorpdfstring{read\_local\_matrix\_and\_vector()}{read\_local\_matrix\_and\_vector()}}
+{\footnotesize\ttfamily \label{jacobi___m_p_i_8c_ad579857a6db8618da7baf6081775556f} 
+void read\+\_\+local\+\_\+matrix\+\_\+and\+\_\+vector (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{matrix}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{vector}{, }\item[{int}]{size}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{matrix\+\_\+file}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{vector\+\_\+file}{, }\item[{int}]{rank}{, }\item[{int}]{num\+\_\+procs}{}\end{DoxyParamCaption})}
+
+
+
+Reads the local portion of a matrix and a vector from files. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em matrix} & Pointer to the local portion of the matrix. \\
+\hline
+\mbox{\texttt{ out}}  & {\em vector} & Pointer to the local portion of the vector. \\
+\hline
+\mbox{\texttt{ in}}  & {\em size} & Total size of the matrix and vector. \\
+\hline
+\mbox{\texttt{ in}}  & {\em matrix\+\_\+file} & Name of the file containing the matrix. \\
+\hline
+\mbox{\texttt{ in}}  & {\em vector\+\_\+file} & Name of the file containing the vector. \\
+\hline
+\mbox{\texttt{ in}}  & {\em rank} & Rank of the current MPI process. \\
+\hline
+\mbox{\texttt{ in}}  & {\em num\+\_\+procs} & Total number of MPI processes. \\
+\hline
+\end{DoxyParams}

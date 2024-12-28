@@ -1,0 +1,152 @@
+\doxysection{generator Namespace Reference}
+\hypertarget{namespacegenerator}{}\label{namespacegenerator}\index{generator@{generator}}
+
+
+generator module for Ax=b generation.  
+
+
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacegenerator_a8ec0abda0fc8490760031220416e7f8c}{compute\+\_\+b\+\_\+from\+\_\+\+A\+\_\+and\+\_\+x}} (A, x)
+\begin{DoxyCompactList}\small\item\em Computes the vector b based on matrix A and vector x. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacegenerator_aa49b8c3c5b0e48d49e1e3ac7ec1c41fe}{generate\+\_\+matrix\+\_\+from\+\_\+x}} (x)
+\begin{DoxyCompactList}\small\item\em Generates a diagonally dominant matrix A based on vector x. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacegenerator_a51af30a60f9f02777c6396b8247e356f}{main}} ()
+\begin{DoxyCompactList}\small\item\em Main entry point for the script. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacegenerator_a88330ac5ab17b81efdc8181fbbf2e11a}{print\+\_\+matrix}} (A)
+\begin{DoxyCompactList}\small\item\em Prints matrix A to the console. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacegenerator_a3c5d7f9bf94635572192fa00a54e9276}{print\+\_\+vector}} (b)
+\begin{DoxyCompactList}\small\item\em Prints a vector to the console. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacegenerator_ab2cd7fc1ebb41777504504c3197f9a6b}{save\+\_\+matrix\+\_\+to\+\_\+file}} (A, filename)
+\begin{DoxyCompactList}\small\item\em Saves matrix A to a file. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacegenerator_adbdc324020fdb91ce0f9f5c3a8fdd755}{save\+\_\+vector\+\_\+to\+\_\+file}} (b, filename)
+\begin{DoxyCompactList}\small\item\em Saves a vector to a file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+generator module for Ax=b generation. 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacegenerator_a8ec0abda0fc8490760031220416e7f8c}\index{generator@{generator}!compute\_b\_from\_A\_and\_x@{compute\_b\_from\_A\_and\_x}}
+\index{compute\_b\_from\_A\_and\_x@{compute\_b\_from\_A\_and\_x}!generator@{generator}}
+\doxysubsubsection{\texorpdfstring{compute\_b\_from\_A\_and\_x()}{compute\_b\_from\_A\_and\_x()}}
+{\footnotesize\ttfamily \label{namespacegenerator_a8ec0abda0fc8490760031220416e7f8c} 
+compute\+\_\+b\+\_\+from\+\_\+\+A\+\_\+and\+\_\+x (\begin{DoxyParamCaption}\item[{}]{A}{, }\item[{}]{x}{}\end{DoxyParamCaption})}
+
+
+
+Computes the vector b based on matrix A and vector x. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Input matrix A. \\
+\hline
+{\em x} & Input vector x. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+b The computed vector b. 
+\end{DoxyReturn}
+\Hypertarget{namespacegenerator_aa49b8c3c5b0e48d49e1e3ac7ec1c41fe}\index{generator@{generator}!generate\_matrix\_from\_x@{generate\_matrix\_from\_x}}
+\index{generate\_matrix\_from\_x@{generate\_matrix\_from\_x}!generator@{generator}}
+\doxysubsubsection{\texorpdfstring{generate\_matrix\_from\_x()}{generate\_matrix\_from\_x()}}
+{\footnotesize\ttfamily \label{namespacegenerator_aa49b8c3c5b0e48d49e1e3ac7ec1c41fe} 
+generate\+\_\+matrix\+\_\+from\+\_\+x (\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
+
+
+
+Generates a diagonally dominant matrix A based on vector x. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Input vector used to construct matrix A. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A The generated matrix A. 
+\end{DoxyReturn}
+\Hypertarget{namespacegenerator_a51af30a60f9f02777c6396b8247e356f}\index{generator@{generator}!main@{main}}
+\index{main@{main}!generator@{generator}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{namespacegenerator_a51af30a60f9f02777c6396b8247e356f} 
+main (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Main entry point for the script. 
+
+Parses command-\/line arguments, generates or reads a vector x, constructs the matrix A, computes the vector b, and saves or prints the results as specified by the user.
+
+Command-\/line arguments\+:
+\begin{DoxyItemize}
+\item {\ttfamily -\/n}\+: Dimension of the system (n).
+\item {\ttfamily -\/m}\+: Method for generating vector x ("{}auto"{} or "{}manual"{}).
+\item {\ttfamily -\/-\/x}\+: Comma-\/separated vector x (required for "{}manual"{} mode).
+\item {\ttfamily -\/A}\+: File name to save matrix A (default\+: "{}\+A.\+dat"{}).
+\item {\ttfamily -\/b}\+: File name to save vector b (default\+: "{}b.\+dat"{}).
+\item {\ttfamily -\/p}\+: Flag to print the results to the console. 
+\end{DoxyItemize}\Hypertarget{namespacegenerator_a88330ac5ab17b81efdc8181fbbf2e11a}\index{generator@{generator}!print\_matrix@{print\_matrix}}
+\index{print\_matrix@{print\_matrix}!generator@{generator}}
+\doxysubsubsection{\texorpdfstring{print\_matrix()}{print\_matrix()}}
+{\footnotesize\ttfamily \label{namespacegenerator_a88330ac5ab17b81efdc8181fbbf2e11a} 
+print\+\_\+matrix (\begin{DoxyParamCaption}\item[{}]{A}{}\end{DoxyParamCaption})}
+
+
+
+Prints matrix A to the console. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Matrix to be printed. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespacegenerator_a3c5d7f9bf94635572192fa00a54e9276}\index{generator@{generator}!print\_vector@{print\_vector}}
+\index{print\_vector@{print\_vector}!generator@{generator}}
+\doxysubsubsection{\texorpdfstring{print\_vector()}{print\_vector()}}
+{\footnotesize\ttfamily \label{namespacegenerator_a3c5d7f9bf94635572192fa00a54e9276} 
+print\+\_\+vector (\begin{DoxyParamCaption}\item[{}]{b}{}\end{DoxyParamCaption})}
+
+
+
+Prints a vector to the console. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vector} & Vector to be printed. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespacegenerator_ab2cd7fc1ebb41777504504c3197f9a6b}\index{generator@{generator}!save\_matrix\_to\_file@{save\_matrix\_to\_file}}
+\index{save\_matrix\_to\_file@{save\_matrix\_to\_file}!generator@{generator}}
+\doxysubsubsection{\texorpdfstring{save\_matrix\_to\_file()}{save\_matrix\_to\_file()}}
+{\footnotesize\ttfamily \label{namespacegenerator_ab2cd7fc1ebb41777504504c3197f9a6b} 
+save\+\_\+matrix\+\_\+to\+\_\+file (\begin{DoxyParamCaption}\item[{}]{A}{, }\item[{}]{filename}{}\end{DoxyParamCaption})}
+
+
+
+Saves matrix A to a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Matrix to be saved. \\
+\hline
+{\em filename} & Name of the file to save the matrix to. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespacegenerator_adbdc324020fdb91ce0f9f5c3a8fdd755}\index{generator@{generator}!save\_vector\_to\_file@{save\_vector\_to\_file}}
+\index{save\_vector\_to\_file@{save\_vector\_to\_file}!generator@{generator}}
+\doxysubsubsection{\texorpdfstring{save\_vector\_to\_file()}{save\_vector\_to\_file()}}
+{\footnotesize\ttfamily \label{namespacegenerator_adbdc324020fdb91ce0f9f5c3a8fdd755} 
+save\+\_\+vector\+\_\+to\+\_\+file (\begin{DoxyParamCaption}\item[{}]{b}{, }\item[{}]{filename}{}\end{DoxyParamCaption})}
+
+
+
+Saves a vector to a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vector} & Vector to be saved. \\
+\hline
+{\em filename} & Name of the file to save the vector to. \\
+\hline
+\end{DoxyParams}
